@@ -818,30 +818,30 @@ reason: AC04 ClosedAccountNumber</span></pre>
       <section class="section" id="problem">
         <div class="section-inner">
           <p class="section-kicker">The problem</p>
-          <h2 class="section-title">Bank sandboxes rarely let teams test the flows that break releases.</h2>
+          <h2 class="section-title">Bank sandboxes cover happy paths. Real integrations break on everything else.</h2>
           <p class="section-copy">
-            Happy paths are usually available. Returns, rejects, direct debit failures, mandate problems, and other non-happy flows often require a support request, a manual bank action, and a lot of waiting.
+            Returns, rejects, direct debit failures, mandate problems, and R-transactions are exactly the flows teams need before production. In most bank sandboxes, those flows still require a support ticket, a manual trigger, and a release schedule that waits.
           </p>
 
           <div class="problem-grid">
             <div class="quote-panel">
               <p>
-                “We need to test a return. Can someone at the bank trigger one in the sandbox?”
+                "We need to test a return. Can someone at the bank trigger one in the sandbox?"
               </p>
               <span>The sentence that turns an integration test into a multi-day process.</span>
             </div>
             <ul class="pain-list">
               <li>
-                <strong>Manual coordination slows QA.</strong>
-                <span>Teams wait days for edge cases that should be deterministic test fixtures.</span>
+                <strong>Failures require humans.</strong>
+                <span>Teams still depend on a bank support queue for failures that should be deterministic test fixtures.</span>
               </li>
               <li>
-                <strong>Generic mocks miss payment semantics.</strong>
-                <span>Wire-level stubs cannot replace payment-aware lifecycle and ISO 20022 behavior.</span>
+                <strong>Mocks miss payment behavior.</strong>
+                <span>Wire-level stubs cannot model payment lifecycle, reason codes, and ISO 20022 message fidelity.</span>
               </li>
               <li>
-                <strong>Internal simulators rarely survive.</strong>
-                <span>Every fintech team builds a partial version, then maintains it alone.</span>
+                <strong>Internal simulators rot.</strong>
+                <span>Every fintech team builds a partial simulator, then carries the maintenance burden alone.</span>
               </li>
             </ul>
           </div>
@@ -851,26 +851,26 @@ reason: AC04 ClosedAccountNumber</span></pre>
       <section class="section section-aqua" id="core">
         <div class="section-inner">
           <p class="section-kicker">Coming open source</p>
-          <h2 class="section-title">Mandas Core will be the payment-aware simulator teams can run locally.</h2>
+          <h2 class="section-title">Mandas Core starts with the local simulator fintech teams actually need.</h2>
           <p class="section-copy">
-            The first public release is focused on credibility: correct messages, deterministic outcomes, fast local startup, and enough SEPA coverage to test the flows that bank sandboxes make painful.
+            The MVP is deliberately narrow: SEPA Credit Transfer simulation first, with deterministic returns and rejects around the flows that block QA today. SWIFT support is planned for a later stage once the SEPA foundation is solid.
           </p>
 
           <div class="feature-grid">
             <article class="feature">
               <span class="feature-label">Apache 2.0</span>
               <h3>Open engine</h3>
-              <p>ISO 20022 parsing, validation, message generation, and lifecycle simulation belong in the auditable open-source core.</p>
+              <p>ISO 20022 parsing, validation, message generation, and lifecycle simulation in an auditable open-source core.</p>
             </article>
             <article class="feature">
               <span class="feature-label">SEPA-first</span>
-              <h3>R-transaction focus</h3>
-              <p>Returns, rejects, refusals, reversals, and reason codes such as AC01, AC04, AM04, MD01, and MS02.</p>
+              <h3>Credit Transfer MVP</h3>
+              <p>Start with SEPA Credit Transfer flows, then expand coverage into more R-transactions and payment schemes.</p>
             </article>
             <article class="feature">
               <span class="feature-label">Local DX</span>
-              <h3>Docker quick start</h3>
-              <p>The target is a simulator that starts in minutes and can be used by developers, QA, and CI pipelines.</p>
+              <h3>Docker and scenarios</h3>
+              <p>A Docker image, REST triggers, and community scenarios that teams can run locally or in CI.</p>
             </article>
           </div>
         </div>
@@ -882,7 +882,7 @@ reason: AC04 ClosedAccountNumber</span></pre>
             <p class="section-kicker">Developer preview</p>
             <h2 class="section-title">The workflow should feel like infrastructure, not a vendor ticket.</h2>
             <p class="section-copy">
-              The commands below show the intended first-release experience. They are marked as a preview until the core engine and Docker image are published.
+              The first release is designed to be pulled into local dev and CI. The commands below remain a preview until Mandas Core and the Docker image are published.
             </p>
           </div>
           <div class="terminal" aria-label="Mandas quick-start preview">
@@ -911,20 +911,27 @@ reason.code = AM04</span></pre>
 
       <section class="section section-mint" id="model">
         <div class="section-inner">
-          <p class="section-kicker">Open core model</p>
-          <h2 class="section-title">The engine is free. The hosted experience is paid.</h2>
+          <p class="section-kicker">Product tiers</p>
+          <h2 class="section-title">Start local. Move hosted. Offer it under your own brand.</h2>
           <p class="section-copy">
-            Mandas should be useful before anyone talks to sales. The commercial layer exists for hosted environments, team workflows, scenario management, CI visibility, and white-label partner sandboxes.
+            Mandas is open core by design: the simulator should be useful before anyone talks to sales, while hosted and white-label tiers cover collaboration, operations, and enterprise distribution.
           </p>
 
-          <div class="split-principles">
-            <article class="principle">
-              <h3>Open source core</h3>
-              <p>Local simulator, ISO 20022 foundation, SEPA lifecycle flows, basic R-transactions, static scenarios, REST API, and Docker-based developer experience.</p>
+          <div class="roadmap">
+            <article class="roadmap-item">
+              <span class="roadmap-status">Tier 1</span>
+              <h3>Open Source</h3>
+              <p>Mandas Core, Docker image, REST triggers, SEPA Credit Transfer MVP, community scenarios, and Apache 2.0 licensing. SWIFT flows are planned for a later OSS stage after the SEPA foundation.</p>
             </article>
-            <article class="principle principle-dark">
-              <h3>Paid platform</h3>
-              <p>Hosted environments, dashboard, scenario builder, team access, audit logs, API skins, CI integrations, and white-label deployment for banks and PSPs.</p>
+            <article class="roadmap-item">
+              <span class="roadmap-status">Tier 2</span>
+              <h3>Hosted Team</h3>
+              <p>Managed environments, dashboard, lifecycle and event views, scenario management, CI/CD integration, and team workflows for fintech engineering and QA teams.</p>
+            </article>
+            <article class="roadmap-item">
+              <span class="roadmap-status">Tier 3</span>
+              <h3>White-label / Self-hosted</h3>
+              <p>Bank or PSP-branded sandbox, self-hosted deployment, enterprise controls, custom API skins, and partner-facing simulation for larger organizations.</p>
             </article>
           </div>
         </div>
@@ -933,7 +940,7 @@ reason.code = AM04</span></pre>
       <section class="section" id="roadmap">
         <div class="section-inner">
           <p class="section-kicker">Roadmap</p>
-          <h2 class="section-title">Built in public, starting with the flows fintech teams cannot test today.</h2>
+          <h2 class="section-title">Built in public, starting with SEPA Credit Transfer.</h2>
           <p class="section-copy">
             The first milestone is not a glossy dashboard. It is a trustworthy simulator that developers can inspect, run, and challenge with real integration pain.
           </p>
@@ -941,18 +948,18 @@ reason.code = AM04</span></pre>
           <div class="roadmap">
             <article class="roadmap-item">
               <span class="roadmap-status">Phase 1</span>
-              <h3>Core credibility</h3>
-              <p>Publish Mandas Core, define message contracts, build SEPA-first lifecycle simulation, and make the quick start real.</p>
+              <h3>SEPA CT simulator</h3>
+              <p>Publish Mandas Core, define message contracts, build the SEPA Credit Transfer lifecycle, and make the Docker quick start real.</p>
             </article>
             <article class="roadmap-item">
               <span class="roadmap-status">Phase 2</span>
               <h3>Team workflow</h3>
-              <p>Add hosted environments, dashboard views, scenario management, SDKs, and CI/CD integration once core usage is validated.</p>
+              <p>Add hosted environments, dashboard views, scenario management, community scenarios, SDKs, and CI/CD integration once core usage is validated.</p>
             </article>
             <article class="roadmap-item">
               <span class="roadmap-status">Phase 3</span>
               <h3>Platform depth</h3>
-              <p>Expand API skins, SWIFT coverage, scenario libraries, enterprise controls, and white-label partner sandbox options.</p>
+              <p>Expand into SWIFT flows, API skins, enterprise controls, self-hosted deployment, and white-label partner sandbox options.</p>
             </article>
           </div>
         </div>
@@ -962,7 +969,7 @@ reason.code = AM04</span></pre>
         <div class="section-inner waitlist-wrap">
           <div>
             <p class="section-kicker">Release updates</p>
-            <h2 class="section-title">Follow the build and get notified when the first OSS release is ready.</h2>
+            <h2 class="section-title">Get notified when Mandas Core is ready to run.</h2>
             <p class="section-copy">
               Join the list for release notes, early demos, and calls for feedback from fintech engineers who have lived the sandbox problem.
             </p>
@@ -973,7 +980,7 @@ reason.code = AM04</span></pre>
               <input id="email" name="email" type="email" placeholder="you@company.com" autocomplete="email" required />
             </div>
             <button class="button button-primary" type="submit">Join release waitlist</button>
-            <p class="form-note">No spam. Product updates only. Powered by Brevo through a secure Vercel function.</p>
+            <p class="form-note">No spam. Only release updates and early access notes.</p>
             <p class="form-status" id="form-status" role="status"></p>
           </form>
         </div>
