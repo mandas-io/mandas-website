@@ -14,4 +14,9 @@ The site is designed to deploy as a static Vercel project.
 
 ## Waitlist
 
-The waitlist form is ready for a Brevo form endpoint. Add the endpoint URL to `BREVO_FORM_ENDPOINT` in `index.html` before launch.
+The waitlist form submits to `api/waitlist.js`, which adds contacts to Brevo using Vercel environment variables:
+
+- `BREVO_API_KEY`
+- `BREVO_LIST_ID`
+
+The Brevo API key is never exposed in browser code.

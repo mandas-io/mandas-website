@@ -972,7 +972,7 @@ reason.code = AM04</span></pre>
               <input id="email" name="email" type="email" placeholder="you@company.com" autocomplete="email" required />
             </div>
             <button class="button button-primary" type="submit">Join release waitlist</button>
-            <p class="form-note">No spam. Product updates only. The form is ready for a Brevo endpoint.</p>
+            <p class="form-note">No spam. Product updates only. Powered by Brevo through a secure Vercel function.</p>
             <p class="form-status" id="form-status" role="status"></p>
           </form>
         </div>
@@ -995,14 +995,13 @@ reason.code = AM04</span></pre>
   </div>
 
   <script>
-    const BREVO_FORM_ENDPOINT = "";
-
     const form = document.getElementById("waitlist-form");
     const statusMessage = document.getElementById("form-status");
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      const submitButton = form.querySelector("button[type='submit']");
       const formData = new FormData(form);
       const email = String(formData.get("email") || "").trim();
 
@@ -1012,18 +1011,22 @@ reason.code = AM04</span></pre>
         return;
       }
 
-      if (!BREVO_FORM_ENDPOINT) {
-        statusMessage.style.display = "block";
-        statusMessage.textContent = "The release list is being connected. For now, email hello@mandas.io and mention Mandas updates.";
-        return;
-      }
-
       try {
-        await fetch(BREVO_FORM_ENDPOINT, {
+        submitButton.disabled = true;
+        submitButton.textContent = "Joining...";
+
+        const response = await fetch("/api/waitlist", {
           method: "POST",
-          body: formData,
-          mode: "no-cors"
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
         });
+
+        if (!response.ok) {
+          const result = await response.json().catch(() => ({}));
+          throw new Error(result.error || "Could not join waitlist");
+        }
 
         statusMessage.style.display = "block";
         statusMessage.textContent = "You are on the list. We will send release updates when Mandas Core is ready.";
@@ -1031,6 +1034,9 @@ reason.code = AM04</span></pre>
       } catch (error) {
         statusMessage.style.display = "block";
         statusMessage.textContent = "Something went wrong. Please try again or email hello@mandas.io.";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Join release waitlist";
       }
     });
   </script>
